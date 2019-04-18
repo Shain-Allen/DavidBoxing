@@ -1,0 +1,33 @@
+class PlayerController : ZilchComponent
+{
+  var Gamepad : Gamepad = null;
+  var MyLastFramePosition : Real3 = Real3(0,0,0);
+  var MyVelocity : Real3 = Real3(0,0,0);
+  
+  function Initialize(init : CogInitializer)
+  {
+    Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+    Zero.Connect(Zero.Keyboard, Events.KeyDown, this.OnKeyDown);
+    this.Gamepad = Zero.Gamepads.GetGamePad(0);
+  }
+
+  function OnKeyDown(event : KeyboardEvent)
+  {
+    
+  }
+
+  function OnLogicUpdate(event : UpdateEvent)
+  {
+    
+    var currentPos = this.Owner.Transform.Translation;
+    var desiredPos = Real3(this.Gamepad.LeftStick, 0) * 10;
+    var currentVel = 5 * (desiredPos - currentPos);   
+    this.Owner.RigidBody.Velocity = currentVel;    
+    var currentAngle = this.Owner.Transform.EulerAngles.Z;
+    var currentDirVec = Real2(Math.Cos(currentAngle), Math.Sin(currentAngle));
+    var desiredDirVec = Math.Normalize(currentVel).XY;
+    currentDirVec = Math.Lerp(currentDirVec,desiredDirVec, 0.2);
+    currentAngle = Math.ATan2(currentDirVec.Y, currentDirVec.X);
+    this.Owner.Transform.SetEulerAnglesXYZ(0,0,currentAngle);
+  }
+}
