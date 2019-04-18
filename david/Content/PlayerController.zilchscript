@@ -3,6 +3,9 @@ class PlayerController : ZilchComponent
   var Gamepad : Gamepad = null;
   var MyLastFramePosition : Real3 = Real3(0,0,0);
   var MyVelocity : Real3 = Real3(0,0,0);
+  //true = left false = right
+  [Property]
+  var LeftRight : Boolean = true;
   
   function Initialize(init : CogInitializer)
   {
@@ -18,9 +21,21 @@ class PlayerController : ZilchComponent
 
   function OnLogicUpdate(event : UpdateEvent)
   {
+    var stick = Real2(0,0);
     
+    if(this.LeftRight == true)
+    {
+      stick = this.Gamepad.LeftStick;
+    }
+    else
+    {
+      stick = this.Gamepad.RightStick;
+    }
+    
+    //gets the intial pos of the fist
     var currentPos = this.Owner.Transform.Translation;
-    var desiredPos = Real3(this.Gamepad.LeftStick, 0) * 10;
+    //sets the desired pos based off the starting spot of the stick
+    var desiredPos = Real3(stick, 0) * 10;
     var currentVel = 5 * (desiredPos - currentPos);   
     this.Owner.RigidBody.Velocity = currentVel;    
     var currentAngle = this.Owner.Transform.EulerAngles.Z;
