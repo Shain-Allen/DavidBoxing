@@ -130,7 +130,7 @@ Level
 			var FarPlane = 500
 			var PerspectiveMode = PerspectiveMode.Orthographic
 			var FieldOfView = 45
-			var Size = 32.9743729
+			var Size = 49.1919632
 		}
 		EditorCameraController 
 		{
@@ -223,9 +223,9 @@ Level
 		var Name = "Sprite"
 		Transform 
 		{
-			var Translation = Real3{-6.54313755, 0, 0}
+			var Translation = Real3{-10, 0, 0}
 			var Scale = Real3{1, 1, 1}
-			var Rotation = Quaternion{0, 0, 0, 1}
+			var Rotation = Quaternion{0, 0, 0.707106829, 0.707106829}
 		}
 		Sprite 
 		{
@@ -264,7 +264,7 @@ Level
 		{
 			var Ghost = false
 			var SendsEvents = true
-			var Material = "4de020863e872da8:DefaultPhysicsMaterial"
+			var Material = "5cd8e2d906724792:Firm"
 			var CollisionGroup = "4e740859314e5515:DefaultGroup"
 			var Offset = Real3{0, 0, 0}
 			var Mesh = "5cd8d570bebea97a:arm"
@@ -275,9 +275,9 @@ Level
 		var Name = "Sprite"
 		Transform 
 		{
-			var Translation = Real3{6.20642376, -3.57627869e-07, 0}
+			var Translation = Real3{10, 0, 0}
 			var Scale = Real3{1, 1, 1}
-			var Rotation = Quaternion{0, 0, 0, 1}
+			var Rotation = Quaternion{0, 0, 0.707106829, 0.707106829}
 		}
 		Sprite 
 		{
@@ -316,7 +316,7 @@ Level
 		{
 			var Ghost = false
 			var SendsEvents = true
-			var Material = "4de020863e872da8:DefaultPhysicsMaterial"
+			var Material = "5cd8e2d906724792:Firm"
 			var CollisionGroup = "4e740859314e5515:DefaultGroup"
 			var Offset = Real3{0, 0, 0}
 			var Mesh = "5cd8d5f0555b2010:flipedArm"

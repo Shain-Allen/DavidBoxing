@@ -1,22 +1,35 @@
 class PlayerController : ZilchComponent
 {
   var Gamepad : Gamepad = null;
-  var MyLastFramePosition : Real3 = Real3(0,0,0);
-  var MyVelocity : Real3 = Real3(0,0,0);
   //true = left false = right
   [Property]
   var LeftRight : Boolean = true;
+  var DoMov : Boolean = true;
+  var Timer : Real = 0;
   
   function Initialize(init : CogInitializer)
   {
     Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
-    Zero.Connect(Zero.Keyboard, Events.KeyDown, this.OnKeyDown);
+    Zero.Connect(this.Owner, Events.CollisionPersisted, this.OnCollisionPersisted);
+    Zero.Connect(this.Owner, Events.CollisionEnded, this.OnCollisionEnded);
+    Zero.Connect(this.Owner, Events.CollisionStarted, this.OnCollisionStarted);
     this.Gamepad = Zero.Gamepads.GetGamePad(0);
   }
 
-  function OnKeyDown(event : KeyboardEvent)
+  function OnCollisionStarted(event : CollisionEvent)
   {
-    
+    this.DoMov = false;
+  }
+
+  function OnCollisionEnded(event : CollisionEvent)
+  {
+    this.DoMov = true;
+    Console.WriteLine("done");
+  }
+
+  function OnCollisionPersisted(event : CollisionEvent)
+  {
+    Console.WriteLine(this.Timer);
   }
 
   function OnLogicUpdate(event : UpdateEvent)
@@ -32,17 +45,22 @@ class PlayerController : ZilchComponent
       stick = this.Gamepad.RightStick;
     }
     
-    //gets the intial pos of the fist
+    //movement handling
     var currentPos = this.Owner.Transform.Translation;
-    //sets the desired pos based off the starting spot of the stick
+    stick.X += this.LeftRight as Integer * -2 + 1;
     var desiredPos = Real3(stick, 0) * 10;
     var currentVel = 5 * (desiredPos - currentPos);   
-    this.Owner.RigidBody.Velocity = currentVel;    
+    if(this.DoMov) this.Owner.RigidBody.Velocity = currentVel;    
+    
+    
+    
+    //rotation handling
     var currentAngle = this.Owner.Transform.EulerAngles.Z;
     var currentDirVec = Real2(Math.Cos(currentAngle), Math.Sin(currentAngle));
     var desiredDirVec = Math.Normalize(currentVel).XY;
     currentDirVec = Math.Lerp(currentDirVec,desiredDirVec, 0.2);
     currentAngle = Math.ATan2(currentDirVec.Y, currentDirVec.X);
     this.Owner.Transform.SetEulerAnglesXYZ(0,0,currentAngle);
+    this.Timer += event.Dt;
   }
 }
