@@ -54,13 +54,24 @@ class PlayerController : ZilchComponent
     
     
     
-    //rotation handling
+    
+    //rotation handling 1
     var currentAngle = this.Owner.Transform.EulerAngles.Z;
     var currentDirVec = Real2(Math.Cos(currentAngle), Math.Sin(currentAngle));
     var desiredDirVec = Math.Normalize(currentVel).XY;
     currentDirVec = Math.Lerp(currentDirVec,desiredDirVec, 0.2);
     currentAngle = Math.ATan2(currentDirVec.Y, currentDirVec.X);
-    this.Owner.Transform.SetEulerAnglesXYZ(0,0,currentAngle);
+    //this.Owner.Transform.SetEulerAnglesXYZ(0,0,currentAngle);
     this.Timer += event.Dt;
+    
+    
+    //rotation handling 2
+    if(this.FixAngle(
   }
+  
+  function FixAngle(angle : Real) : Real
+  {
+    return(Math.ATan2(Math.Cos(angle), Math.Sin(angle)));
+  }
+    
 }
