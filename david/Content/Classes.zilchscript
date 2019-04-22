@@ -4,7 +4,7 @@ class Classes : ZilchComponent
 {
   
   var Shekalim : Array[Real] = Array[Real](){900, 500, 100, 300, 50, 400, 0, 700};
-  var Health : Array[Real] = Array[Real](){80, 80, 100};
+  var Health : Array[Real] = Array[Real](){80, 80, 100, 40, 100, 60, 100, 1000};
   var Strength : Array[Real] = Array[Real](){};
   
   function Initialize(init : CogInitializer)
