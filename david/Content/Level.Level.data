@@ -19,7 +19,7 @@ Level
 			var WakeUpOnChange = false
 			var DebugDrawEffect = false
 			var LinearDamping = 1
-			var AngularDamping = 0.100000001
+			var AngularDamping = 1
 			var LinearDrag = 0
 			var AngularDrag = 0
 		}

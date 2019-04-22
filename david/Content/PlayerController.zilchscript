@@ -64,9 +64,19 @@ class PlayerController : ZilchComponent
     //this.Owner.Transform.SetEulerAnglesXYZ(0,0,currentAngle);
     this.Timer += event.Dt;
     
-    
+    Console.WriteLine(Math.ATan2(stick.X, stick.Y));
     //rotation handling 2
-    if(this.FixAngle(
+    
+    if(this.FixAngle(currentAngle) - Math.ATan2(stick.X, stick.Y) > 0.1)
+    {
+      Console.WriteLine("left!");
+      this.Owner.RigidBody.AngularVelocity += Real3(0,0,5*event.Dt);
+    }
+    else if(this.FixAngle(currentAngle) - Math.ATan2(stick.X, stick.Y) < -0.1)
+    {
+      Console.WriteLine("right!");
+      this.Owner.RigidBody.AngularVelocity += Real3(0,0,5*-event.Dt);
+    }
   }
   
   function FixAngle(angle : Real) : Real
