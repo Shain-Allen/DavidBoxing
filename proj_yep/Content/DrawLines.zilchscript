@@ -1,0 +1,46 @@
+class DrawLines : ZilchComponent
+{
+  [Dependency]
+  var Transform : Transform = null;
+  var Camera : Cog = null;
+  var MyLines : Array[Cog] = Array[Cog](1){};
+  var LineIndex : Integer = 0;
+  var Active : Boolean = true;
+  [Property]
+  var Precision : Real = 1;
+  
+  function Initialize(init : CogInitializer)
+  {
+    Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+    this.Camera = this.Space.FindObjectByName("GameCamera");
+    this.MyLines[this.LineIndex] = this.Space.CreateAtPosition(Archetype.Paint, this.Transform.Translation);
+    this.MyLines[this.LineIndex].AttachTo(this.Owner);
+  }
+
+  function OnLogicUpdate(event : UpdateEvent)
+  { 
+    if(!Zero.Mouse.IsButtonDown(MouseButtons.Left))
+      this.Active = false;
+      
+    if(this.Active)
+    {    
+      var mousePosition = this.Camera.CameraViewport.ScreenToWorldZPlane(Zero.Mouse.ClientPosition, 0);
+      Console.WriteLine(mousePosition);
+      
+      var currentLine = this.MyLines[this.LineIndex];
+      //vector between line and mouse, used to find angle to point at
+      var deltaVector = currentLine.Transform.WorldTranslation - mousePosition;
+      var currentLineAngle = -Math.ATan2(deltaVector.X, deltaVector.Y) - Math.Pi / 2;
+      var currentLineDistMouse = Math.Distance(mousePosition, currentLine.Transform.WorldTranslation);
+      currentLine.Transform.SetEulerAnglesXYZ(0,0,currentLineAngle);
+      currentLine.Transform.Scale = Real3(currentLineDistMouse * 129, currentLine.Transform.Scale.YZ);
+      if(currentLineDistMouse > this.Precision)
+      {
+        this.LineIndex += 1;
+        
+        this.MyLines.Add(this.Space.CreateAtPosition(Archetype.Paint, mousePosition));
+        this.MyLines[this.LineIndex].AttachTo(this.Owner);
+      }
+    }
+  }
+}

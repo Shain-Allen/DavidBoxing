@@ -1,0 +1,57 @@
+class Draw : ZilchComponent
+{
+  //lights
+  var Camera : Cog = null;
+  //action
+  
+  var MousePosition : Real3 = Real3();
+  
+  //note: drawings comprise lines
+  var MyDrawings : Array[Cog] = Array[Cog](){};  
+  //which drawing is being operated on currently
+  var DrawIndex : Integer = -1;
+  
+  function Initialize(init : CogInitializer)
+  {
+    Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+    Zero.Connect(this.Space, Events.MouseDown, this.OnMouseDown);
+    Zero.Connect(this.Space, Events.MouseUp, this.OnMouseUp);
+    Zero.Connect(Zero.Keyboard, Events.KeyDown, this.OnKeyDown);
+    this.Camera = this.Space.FindObjectByName("GameCamera");
+    
+  }
+
+  function OnKeyDown(event : KeyboardEvent)
+  {
+    if((event.Key == Keys.Delete || event.Key == Keys.Back)  && this.DrawIndex > -1)
+    {
+      this.MyDrawings[this.DrawIndex].Destroy();
+      this.DrawIndex -= 1;
+      this.MyDrawings.Pop();
+    }
+  }
+
+  function OnMouseUp(event : ViewportMouseEvent)
+  {
+    //stoping drawing when you let go of the mouse
+    this.MyDrawings[this.DrawIndex].DrawLines.Active = false;
+  }
+
+  function OnMouseDown(event : ViewportMouseEvent)
+  {
+    this.DrawIndex += 1;
+    this.MyDrawings.Add(this.Space.CreateAtPosition(Archetype.Drawer, this.MousePosition));
+    Console.WriteLine(this.MyDrawings[this.DrawIndex]);
+  }
+
+  function OnLogicUpdate(event : UpdateEvent)
+  {
+    Zero.Mouse.Cursor = Cursor.Invisible;
+    //literally just gets the mouse position. i swear to god this engine 
+    this.MousePosition = this.Camera.CameraViewport.ScreenToWorldZPlane(Zero.Mouse.ClientPosition, 0);
+    this.Owner.Transform.Translation = this.MousePosition;
+    
+     
+    
+  }
+}

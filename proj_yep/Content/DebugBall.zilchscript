@@ -1,0 +1,32 @@
+class DebugBall : ZilchComponent
+{
+  function Initialize(init : CogInitializer)
+  {
+    Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+  }
+
+  function OnLogicUpdate(event : UpdateEvent)
+  {
+    if(Zero.Keyboard.KeyIsDown(Keys.W))
+      this.Owner.RigidBody.Velocity += Real3(0,20,0) * event.Dt;
+    if(Zero.Keyboard.KeyIsDown(Keys.A))
+      this.Owner.RigidBody.Velocity += Real3(-20,0,0) * event.Dt;
+    if(Zero.Keyboard.KeyIsDown(Keys.D))
+      this.Owner.RigidBody.Velocity += Real3(20,0,0) * event.Dt;  
+      
+    if(this.Owner.Transform.Translation.X > 18.5 && this.Owner.Parent == null)
+      this.Owner.Transform.Translation += Real3(-39,0,0);
+      
+    if(this.Owner.Transform.Translation.X < -18.5 && this.Owner.Parent == null)
+      this.Owner.Transform.Translation += Real3(39,0,0);  
+      
+    if(this.Owner.Transform.Translation.Y > 12 && this.Owner.Parent == null)
+      this.Owner.Transform.Translation += Real3(0,-23,0);
+      
+    if(this.Owner.Transform.Translation.Y < -12 && this.Owner.Parent == null)
+      this.Owner.Transform.Translation += Real3(0,23,0);    
+      
+    if(this.Owner.Parent != null)
+      this.Owner.Transform.LocalTranslation = Real3(0,0,0);
+  }
+}
